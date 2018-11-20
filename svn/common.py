@@ -24,7 +24,7 @@ _STATUS_ENTRY = \
 
 class CommonClient(svn.common_base.CommonBase):
     def __init__(self, url_or_path, type_, username=None, password=None, 
-                 svn_filepath='svn', trust_cert=None, env={}, *args, **kwargs):
+                 svn_filepath='svn', trust_cert=None, conf={}, env={}, *args, **kwargs):
         super(CommonClient, self).__init__(*args, **kwargs)
 
         self.__url_or_path = url_or_path
@@ -33,6 +33,7 @@ class CommonClient(svn.common_base.CommonBase):
         self.__svn_filepath = svn_filepath
         self.__trust_cert = trust_cert
         self.__env = env
+        self.__conf = conf
 
         if type_ not in (svn.constants.LT_URL, svn.constants.LT_PATH):
             raise svn.exception.SvnException("Type is invalid: {}".format(type_))
@@ -49,6 +50,9 @@ class CommonClient(svn.common_base.CommonBase):
             cmd += ['--username', self.__username]
             cmd += ['--password', self.__password]
             cmd += ['--no-auth-cache']
+
+        for key, value in self.__conf.items():
+            cmd += ['--%s' % key, value]
 
         cmd += [subcommand] + args
         return self.external_command(cmd, environment=self.__env, **kwargs)
