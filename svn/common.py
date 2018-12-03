@@ -41,7 +41,7 @@ class CommonClient(svn.common_base.CommonBase):
         self.__type = type_
 
     def run_command(self, subcommand, args, **kwargs):
-        cmd = [self.__svn_filepath, '--non-interactive']
+        cmd = [self.__svn_filepath, '--non-interactive', '--config-dir=/tmp']
 
         if self.__trust_cert:
             cmd += ['--trust-server-cert']
@@ -52,7 +52,7 @@ class CommonClient(svn.common_base.CommonBase):
             cmd += ['--no-auth-cache']
 
         for key, value in self.conf.items():
-            cmd += ['--%s' % key, value]
+            cmd += ['--%s=%s' % (key, value)]
 
         cmd += [subcommand] + args
         return self.external_command(cmd, environment=self.__env, **kwargs)
