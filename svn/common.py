@@ -33,7 +33,7 @@ class CommonClient(svn.common_base.CommonBase):
         self.__svn_filepath = svn_filepath
         self.__trust_cert = trust_cert
         self.__env = env
-        self.__conf = conf
+        self.conf = conf
 
         if type_ not in (svn.constants.LT_URL, svn.constants.LT_PATH):
             raise svn.exception.SvnException("Type is invalid: {}".format(type_))
@@ -51,7 +51,7 @@ class CommonClient(svn.common_base.CommonBase):
             cmd += ['--password', self.__password]
             cmd += ['--no-auth-cache']
 
-        for key, value in self.__conf.items():
+        for key, value in self.conf.items():
             cmd += ['--%s' % key, value]
 
         cmd += [subcommand] + args
